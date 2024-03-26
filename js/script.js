@@ -1,21 +1,16 @@
-var argButtonName, buttonPaper, buttonRock, buttonScissors, buttonTest;
+let playerScore = 0;
+let computerScore = 0;
 
-/**
- * Describe this function...
- */
-buttonScissors = document.getElementById("button-scissors");
-buttonPaper = document.getElementById("button-paper");
-buttonRock = document.getElementById("button-rock");
+const buttonScissors = document.getElementById("button-scissors");
+const buttonPaper = document.getElementById("button-paper");
+const buttonRock = document.getElementById("button-rock");
 
 function buttonClicked(argButtonName) {
 	clearMessages();
 	console.log(argButtonName + " został kliknięty");
 
-	var computerMove, playerInput, playerMove, randomNumber;
+	var computerMove, playerMove, randomNumber;
 
-	/**
-	 * Describe this function...
-	 */
 	function getMoveName(argMoveId) {
 		console.log("wywołano funkcję getMoveName z argumentem: " + argMoveId);
 		if (argMoveId == 1) {
@@ -34,9 +29,14 @@ function buttonClicked(argButtonName) {
 		}
 	}
 
-	/**
-	 * Describe this function...
-	 */
+	function updateScore(result) {
+		if (result === "player") {
+			playerScore++;
+		} else if (result === "computer") {
+			computerScore++;
+		}
+	}
+
 	function displayResult(argPlayerMove, argComputerMove) {
 		console.log(
 			"wywołano funkcję displayResults z argumentami: " +
@@ -44,19 +44,28 @@ function buttonClicked(argButtonName) {
 				", " +
 				argComputerMove
 		);
-		if (argPlayerMove == "papier" && argComputerMove == "kamień") {
+		if (
+			(argPlayerMove == "papier" && argComputerMove == "kamień") ||
+			(argPlayerMove == "kamień" && argComputerMove == "nożyce") ||
+			(argPlayerMove == "nożyce" && argComputerMove == "papier")
+		) {
 			printMessage("Wygrywasz!");
-		} else if (argPlayerMove == "kamień" && argComputerMove == "nożyce") {
-			printMessage("Wygrywasz!");
-		} else if (argPlayerMove == "nożyce" && argComputerMove == "papier") {
-			printMessage("Wygrywasz!");
+			updateScore("player");
 		} else if (argPlayerMove == argComputerMove) {
 			printMessage("Remis!");
 		} else {
 			printMessage("Przegrywasz :(");
+			updateScore("computer");
 		}
 		printMessage("Zagrałem " + argComputerMove + ", a Ty " + argPlayerMove);
+		displayScore();
 	}
+
+	function displayScore() {
+		document.getElementById("result").innerText =
+			playerScore + " - " + computerScore;
+	}
+
 	playerMove = argButtonName;
 	console.log("ruch gracza to: " + playerMove);
 	randomNumber = Math.floor(Math.random() * 3 + 1);
